@@ -22,7 +22,7 @@ rm $KURTOSIS_ARCHIVE
 # configure kurtosis to use podman
 # https://github.com/kurtosis-tech/kurtosis/issues/1072
 # ls $XDG_RUNTIME_DIR/podman/podman.sock
-# DOCKER_HOST="/run/user/1000/podman/podman.sock"
+# export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/podman/podman.sock
 
 
 
