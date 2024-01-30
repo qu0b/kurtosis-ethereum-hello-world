@@ -48,7 +48,18 @@ PODMAN_SOCK=$(podman info --debug | grep sock | awk '{ print $2;}')
 # CONTAINER_SOCKET="unix:///run/containerd/containerd.sock"
 CONTAINER_SOCKET="unix:///var/run/podman/podman.sock"
 # echo "using podman socket $CONTAINER_SOCKET"
-DOCKER_HOST="$CONTAINER_SOCKET" ./bin/kurtosis run --enclave hello ./ethereum-package "$(cat ./config.yaml)"
+export DOCKER_HOST="$CONTAINER_SOCKET"
+
+# create a bridge network
+podman create network bridge
+
+# set the default network to bridge
+sed s/default_network=podman/podman/bridge /var/lib/containers/storage
+
+./bin/kurtosis engine start
+./bin/kurtosis enclave create -n hello
+
+./bin/kurtosis run --enclave hello ./ethereum-package "$(cat ./config.yaml)"
 
 
 # ./bin/kurtosis run --enclave hello ./ethereum-package "$(cat ./config.yaml)"
